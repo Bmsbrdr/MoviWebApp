@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Favorite movies of {{ user.name }}</h1>
+<form action="{{ url_for('add_movie', user_id=user.id) }}" method="post">
+    <label>Movie title <input name="title" required></label>
+    <button type="submit">Add from OMDb</button>
+</form>
+{% for movie in movies %}
+<article>
+    <h2>{{ movie.name }}</h2>
+    {% if movie.poster_url %}<img src="{{ movie.poster_url }}" alt="Poster for {{ movie.name }}" width="120">{% endif %}
+    <p>Director: {{ movie.director or 'Unknown' }} · Year: {{ movie.year or 'Unknown' }}</p>
+    <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
+        <label>Title <input name="title" value="{{ movie.name }}" required maxlength="200"></label>
+        <button type="submit">Update title</button>
+    </form>
+    <form action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
+        <button type="submit">Delete movie</button>
+    </form>
+</article>
+{% else %}
+<p>No movies yet.</p>
+{% endfor %}
+{% endblock %}

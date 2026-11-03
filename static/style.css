@@ -1,0 +1,5 @@
+body { font-family: system-ui, sans-serif; margin: 2rem; color: #222; }
+main { max-width: 800px; margin: auto; }
+form { margin: 1rem 0; }
+input, button { padding: .5rem; }
+article { border-top: 1px solid #ccc; padding: 1rem 0; }
