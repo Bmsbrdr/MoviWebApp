@@ -3,13 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MoviWeb</title>
+    <title>{% block title %}MoviWeb{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<main>
-    <a href="{{ url_for('home') }}">MoviWeb</a>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="site-header">
+    <nav class="container nav" aria-label="Main navigation">
+        <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark" aria-hidden="true">M</span> MoviWeb<span class="brand-dot">.</span></a>
+        <a class="nav-link" href="{{ url_for('home') }}">All users <span aria-hidden="true">↗</span></a>
+    </nav>
+</header>
+<main id="content" class="container">
     {% block content %}{% endblock %}
 </main>
+<footer class="container site-footer">Your people. Your movies. Your collection.</footer>
 </body>
 </html>

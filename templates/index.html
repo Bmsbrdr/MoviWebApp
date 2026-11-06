@@ -1,16 +1,35 @@
 {% extends 'base.html' %}
+{% block title %}Your people · MoviWeb{% endblock %}
 {% block content %}
-<h1>Select a user</h1>
-<ul>
-    {% for user in users %}
-    <li><a href="{{ url_for('list_movies', user_id=user.id) }}">{{ user.name }}</a></li>
-    {% else %}
-    <li>No users yet.</li>
-    {% endfor %}
-</ul>
-<h2>Add a user</h2>
-<form action="{{ url_for('create_user') }}" method="post">
-    <label>Name <input name="name" required maxlength="100"></label>
-    <button type="submit">Add</button>
-</form>
+<section class="hero">
+    <p class="eyebrow">A home for your favorites</p>
+    <h1>Great movies.<br><span>Personal collections.</span></h1>
+    <p class="intro">Pick your profile, revisit a favorite, or find your next great watch.</p>
+</section>
+<div class="dashboard">
+    <section aria-labelledby="users-heading">
+        <div class="section-heading"><h2 id="users-heading">Who's watching?</h2><span class="badge">{{ users|length }} users</span></div>
+        <ul class="user-list">
+            {% for user in users %}
+            <li><a class="user-card" href="{{ url_for('list_movies', user_id=user.id) }}">
+                <span class="avatar" aria-hidden="true">{{ user.name[:1]|upper }}</span>
+                <span class="user-name">{{ user.name }}<small>Explore collection</small></span>
+                <span class="arrow" aria-hidden="true">→</span>
+            </a></li>
+            {% else %}
+            <li class="empty-state"><h3>The first collection starts with you.</h3><p>Add a user to start saving favorite movies.</p></li>
+            {% endfor %}
+        </ul>
+    </section>
+    <section class="panel" aria-labelledby="add-user-heading">
+        <p class="eyebrow">Make it personal</p>
+        <h2 id="add-user-heading">Join the movie night.</h2>
+        <p>Create a profile and build a collection that's all yours.</p>
+        <form action="{{ url_for('create_user') }}" method="post">
+            <label for="user-name">Your name</label>
+            <input id="user-name" name="name" placeholder="e.g. Alex" autocomplete="name" required maxlength="100">
+            <button type="submit">Create user <span aria-hidden="true">→</span></button>
+        </form>
+    </section>
+</div>
 {% endblock %}

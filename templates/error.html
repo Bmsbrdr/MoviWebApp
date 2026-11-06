@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{{ error.name }} · MoviWeb{% endblock %}
+{% block content %}
+<section class="error-state">
+    <p class="eyebrow">Error {{ error.code }}</p>
+    <h1>{{ error.name }}</h1>
+    <p>{{ error.description }}</p>
+    <p>Please go back to the form to try again.</p>
+    <a class="button" href="{{ url_for('home') }}">Back to users</a>
+</section>
+{% endblock %}

@@ -1,10 +1,28 @@
 from models import db, User, Movie
+from sqlalchemy.exc import SQLAlchemyError
+
 
 class DataManager:
+    def get_user(self, user_id):
+        return db.session.get(User, user_id)
+
+    def get_movie(self, movie_id):
+        return db.session.get(Movie, movie_id)
+
+    def _save(self, operation):
+        try:
+            operation()
+            db.session.commit()
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
+
+    def init_database(self):
+        db.create_all()
+
     def create_user(self, name):
         user = User(name=name)
-        db.session.add(user)
-        db.session.commit()
+        self._save(lambda: db.session.add(user))
         return user
 
     def get_users(self):
@@ -16,19 +34,16 @@ class DataManager:
         ).scalars().all()
 
     def add_movie(self, movie):
-        db.session.add(movie)
-        db.session.commit()
+        self._save(lambda: db.session.add(movie))
 
     def update_movie(self, movie_id, new_title):
-        movie = db.session.get(Movie, movie_id)
+        movie = self.get_movie(movie_id)
         if movie is None:
             raise ValueError('Movie not found.')
-        movie.name = new_title
-        db.session.commit()
+        self._save(lambda: setattr(movie, 'name', new_title))
 
     def delete_movie(self, movie_id):
-        movie = db.session.get(Movie, movie_id)
+        movie = self.get_movie(movie_id)
         if movie is None:
             raise ValueError('Movie not found.')
-        db.session.delete(movie)
-        db.session.commit()
+        self._save(lambda: db.session.delete(movie))

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Something went wrong · MoviWeb{% endblock %}
+{% block content %}
+<section class="error-state">
+    <p class="eyebrow">Error 500</p>
+    <h1>A brief <span>intermission.</span></h1>
+    <p>Something went wrong on our side. Please try again later.</p>
+    <a class="button" href="{{ url_for('home') }}">Back to users</a>
+</section>
+{% endblock %}

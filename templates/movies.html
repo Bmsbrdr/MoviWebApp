@@ -1,24 +1,48 @@
 {% extends 'base.html' %}
+{% block title %}{{ user.name }}'s collection · MoviWeb{% endblock %}
 {% block content %}
-<h1>Favorite movies of {{ user.name }}</h1>
-<form action="{{ url_for('add_movie', user_id=user.id) }}" method="post">
-    <label>Movie title <input name="title" required></label>
-    <button type="submit">Add from OMDb</button>
-</form>
-{% for movie in movies %}
-<article>
-    <h2>{{ movie.name }}</h2>
-    {% if movie.poster_url %}<img src="{{ movie.poster_url }}" alt="Poster for {{ movie.name }}" width="120">{% endif %}
-    <p>Director: {{ movie.director or 'Unknown' }} · Year: {{ movie.year or 'Unknown' }}</p>
-    <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
-        <label>Title <input name="title" value="{{ movie.name }}" required maxlength="200"></label>
-        <button type="submit">Update title</button>
+<section class="hero collection-hero">
+    <a class="back-link" href="{{ url_for('home') }}">← Back to users</a>
+    <p class="eyebrow">The personal collection</p>
+    <h1>{{ user.name }}'s <span>favorites.</span></h1>
+    <p class="intro">The stories worth keeping. {{ movies|length }} movies and counting.</p>
+</section>
+<section class="panel add-movie" aria-labelledby="add-movie-heading">
+    <div><h2 id="add-movie-heading">What's next on your list?</h2><p>Search by title. We'll find the details on OMDb.</p></div>
+    <form class="search-form" action="{{ url_for('add_movie', user_id=user.id) }}" method="post">
+        <div class="search-field"><label for="movie-title">Movie title</label><input id="movie-title" name="title" placeholder="e.g. Interstellar" required maxlength="200"></div>
+        <button type="submit">Add movie <span aria-hidden="true">+</span></button>
     </form>
-    <form action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
-        <button type="submit">Delete movie</button>
-    </form>
-</article>
-{% else %}
-<p>No movies yet.</p>
-{% endfor %}
+</section>
+<section aria-labelledby="movies-heading">
+    <div class="section-heading"><h2 id="movies-heading">Your movie shelf</h2><span class="badge">{{ movies|length }} movies</span></div>
+    <div class="movie-grid">
+    {% for movie in movies %}
+    <article class="movie-card">
+        <div class="poster">
+            <div class="poster-placeholder"><span aria-hidden="true">M.</span><span>Poster unavailable</span></div>
+            {% if movie.poster_url %}<img src="{{ movie.poster_url }}" alt="Poster for {{ movie.name }}" loading="lazy" onerror="this.hidden=true">{% endif %}
+            <span class="year-tag">{{ movie.year if movie.year and movie.year != 'N/A' else 'Unknown year' }}</span>
+        </div>
+        <div class="movie-info">
+            <h3>{{ movie.name }}</h3>
+            <p class="director">Directed by {{ movie.director if movie.director and movie.director != 'N/A' else 'Unknown' }}</p>
+            <details>
+                <summary>Edit title</summary>
+                <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
+                    <label for="title-{{ movie.id }}">Movie title</label>
+                    <input id="title-{{ movie.id }}" name="title" value="{{ movie.name }}" required maxlength="200">
+                    <button type="submit" class="secondary">Save title</button>
+                </form>
+            </details>
+            <form class="delete-form" action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="post">
+                <button type="submit" class="delete-button" aria-label="Delete {{ movie.name }}">Delete movie</button>
+            </form>
+        </div>
+    </article>
+    {% else %}
+    <div class="empty-state"><h3>Your next favorite belongs here.</h3><p>No movies yet. Add your first title above to start your collection.</p></div>
+    {% endfor %}
+    </div>
+</section>
 {% endblock %}

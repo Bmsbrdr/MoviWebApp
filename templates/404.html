@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Page not found · MoviWeb{% endblock %}
+{% block content %}
+<section class="error-state">
+    <p class="eyebrow">Error 404</p>
+    <h1>This scene is <span>missing.</span></h1>
+    <p>The page, user, or movie you are looking for could not be found.</p>
+    <a class="button" href="{{ url_for('home') }}">Back to users</a>
+</section>
+{% endblock %}
